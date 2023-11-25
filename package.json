@@ -15,6 +15,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "graphql": "^16.8.1",
+    "http-proxy-middleware": "^2.0.6",
     "react": "latest",
     "react-dom": "latest"
   },

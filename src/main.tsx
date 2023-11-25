@@ -5,23 +5,30 @@ import { CssBaseline } from '@mui/material';
 import theme from './theme';
 import App from './App';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+// const proxy = createProxyMiddleware('/graphql', {
+//   target: 'https://stage.dotidot.io',
+//   changeOrigin: true,
+// });
+
 const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
+  uri: 'https://spacex-production.up.railway.app/',
+
   cache: new InMemoryCache(),
 });
-// const client = ...
 
 client
   .query({
     query: gql`
-      query GetLocations {
-        locations {
-          id
-          name
-          description
-          photo
-        }
+    query ExampleQuery {
+      company {
+        ceo
       }
+      roadster {
+        apoapsis_au
+      }
+    }
+      
     `,
   })
   .then((result) => console.log(result));

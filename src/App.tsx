@@ -3,6 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useQuery, gql } from '@apollo/client';
+import TableComponent from './Components/TableComponent';
 
 interface Location {
   id: number; // or number, depending on the actual type of the 'id' property
@@ -10,38 +11,34 @@ interface Location {
   description: string;
   photo: string;
 }
-const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
-    }
+const GET_DATA = gql`
+query ExampleQuery {
+  company {
+    ceo
   }
+  roadster {
+    apoapsis_au
+  }
+}
+  
 `;
 
-function DisplayLocations() {
-  const { loading, error, data } = useQuery(GET_LOCATIONS);
+function DisplayData() {
+  const { loading, error, data } = useQuery(GET_DATA);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-  
-  return  data.locations.map((location: Location) => (
-    <div key={location.id}>
-      <h3>{location.name}</h3>
-      <img width="400" height="250" alt="location-reference" src={`${location.photo}`} />
-      <br />
-      <b>About this location:</b>
-      <p>{location.description}</p>
-      <br />
+  return (
+    <div>
+      <h3>Company CEO: {data.company.ceo}</h3>
+      <h3>Roadster Apoapsis: {data.roadster.apoapsis_au}</h3>
     </div>
-  ));
+  );
 }
 
 export default function App() {
-  const { loading, error, data } = useQuery(GET_LOCATIONS);
+  const { loading, error, data } = useQuery(GET_DATA);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
@@ -51,7 +48,8 @@ export default function App() {
         <Typography variant="h4" component="h1" gutterBottom>
           Dotidot table
         </Typography>
-        <DisplayLocations />
+        <DisplayData />
+        <TableComponent/>
       </Box>
     </Container>
   );
