@@ -1,56 +1,80 @@
 import * as React from 'react';
+import { useQuery, ApolloClient, InMemoryCache, ApolloProvider, createHttpLink,gql  } from '@apollo/client';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { useQuery, gql } from '@apollo/client';
 import TableComponent from './Components/TableComponent';
+import { setContext } from '@apollo/client/link/context';
 
-interface Location {
-  id: number; // or number, depending on the actual type of the 'id' property
+interface DataSource {
   name: string;
-  description: string;
-  photo: string;
+  archived: boolean;
+  createdAt: string;
+  icon: string;
+  itemsCount: number;
+  lastImport: string;
 }
-const GET_DATA = gql`
-query ExampleQuery {
-  company {
-    ceo
-  }
-  roadster {
-    apoapsis_au
-  }
-}
-  
-`;
 
+const httpLink = createHttpLink({
+  uri: 'https://stage.dotidot.io/graphql', // Your GraphQL API endpoint
+  headers: {
+    authorization: 'ApiToken 84e1694aa795ff75dd69d4233061ebdd',
+  },
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
+
+const GET_DATA = gql`
+  query DataSources {
+    collection(
+      page: 0,
+      limit: 100,
+      identifier: "organization"
+      organizationId: 19952
+    ) {
+      dataSources {
+        name
+        createdAt
+      }
+    }
+  }
+`;
 function DisplayData() {
   const { loading, error, data } = useQuery(GET_DATA);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  // Access the data from the GraphQL response
+  const dataSource: DataSource[] = data.collection.dataSources;
+
   return (
     <div>
-      <h3>Company CEO: {data.company.ceo}</h3>
-      <h3>Roadster Apoapsis: {data.roadster.apoapsis_au}</h3>
+      {dataSource.map((item, index) => (
+        <div key={index}>
+          <h3>Data Source Name: {item.name}</h3>
+          <p>Created At: {item.createdAt}</p>
+        </div>
+      ))}
     </div>
   );
 }
 
 export default function App() {
-  const { loading, error, data } = useQuery(GET_DATA);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Dotidot table
-        </Typography>
-        <DisplayData />
-        <TableComponent/>
-      </Box>
-    </Container>
+    <ApolloProvider client={client}>
+      <Container maxWidth="sm">
+        <Box sx={{ my: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Dotidot table
+          </Typography>
+          <DisplayData />
+          <TableComponent />
+        </Box>
+      </Container>
+    </ApolloProvider>
   );
 }
