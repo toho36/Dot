@@ -1,30 +1,22 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink, gql, useQuery } from '@apollo/client';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
-import theme from './theme';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 import App from './App';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import theme from './theme';
+
+const httpLink = createHttpLink({
+  uri: 'https://stage.dotidot.io/graphql',
+  headers: {
+    authorization: 'ApiToken 84e1694aa795ff75dd69d4233061ebdd',
+  },
+});
+
 const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
+  link: httpLink,
   cache: new InMemoryCache(),
 });
-// const client = ...
-
-client
-  .query({
-    query: gql`
-      query GetLocations {
-        locations {
-          id
-          name
-          description
-          photo
-        }
-      }
-    `,
-  })
-  .then((result) => console.log(result));
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

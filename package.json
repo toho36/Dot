@@ -2,11 +2,12 @@
   "name": "material-ui-vite-ts",
   "private": true,
   "version": "5.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/client": "^3.8.7",
@@ -15,13 +16,28 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "http-proxy-middleware": "^2.0.6",
+    "lodash": "^4.17.21",
+    "n": "^9.2.0",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-router-dom": "^6.20.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^29.5.10",
+    "@types/lodash": "^4.14.202",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/testing-library__user-event": "^4.2.0",
     "@vitejs/plugin-react": "latest",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "typescript": "latest",
     "vite": "latest"
   }
