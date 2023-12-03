@@ -5,27 +5,23 @@ import { useCallback, useState } from 'react';
 import { UPDATE_DATA_SOURCE } from '../Utils/graphqlQueries';
 
 
-export const useHandleNameChange = () => {
-  const [inputValues, setInputValues] = useState<{ [id: number]: string }>({});
+export const useHandleNameChange = (id: number, name: string) => {
+  const [nameValue, setNameValue] = useState<string>(name);
   const [updateDataSource] = useMutation(UPDATE_DATA_SOURCE);
 
-  const handleNameChange = (id: number, newName: string) => {
-    setInputValues((prevInputValues) => ({
-      ...prevInputValues,
-      [id]: newName,
-    }));
-
-    debouncedUpdate(id, newName);
+  const handleNameChange = (newName: string) => {
+    setNameValue(newName)
+    debouncedUpdate(newName);
   };
 
-  const debouncedUpdate = debounce(
-    async (id: number, newName: string) => {
+  const debouncedUpdate = useCallback(debounce(
+    (newName: string) => {
       if (!newName.trim()) {
         console.error('Invalid name provided:', newName);
         return;
       }
       try {
-        await updateDataSource({
+        updateDataSource({
           variables: {
             id,
             name: newName,
@@ -35,10 +31,10 @@ export const useHandleNameChange = () => {
         console.error('Error updating name:', error);
       }
     },
-    1000
-  );
+    300
+  ), []);
 
-  return { handleNameChange, inputValues };
+  return { handleNameChange, nameValue };
 };
 
 export const useHandleArchivedChange = () => {

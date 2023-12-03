@@ -21,7 +21,6 @@ export const useColumnVisibility = (): [ColumnVisibility, (columnName: string) =
       ...prevVisibility,
       [columnName]: !prevVisibility[columnName],
     }));
-    localStorage.setItem('columnVisibility', JSON.stringify(columnVisibility));
   }, [columnVisibility]);
 
   useEffect(() => {

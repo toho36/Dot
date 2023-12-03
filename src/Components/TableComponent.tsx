@@ -12,8 +12,6 @@ const TableComponent: React.FC = () => {
   const { loading, error, data } = useQuery(GET_DATA_SOURCES);
   const { collection: { dataSources = [] } = {} } = data || {};
   const [columnVisibility, toggleColumnVisibility] = useColumnVisibility();
-  const handleArchivedChange = useHandleArchivedChange();
-  const { handleNameChange, inputValues } = useHandleNameChange();
 
 
   if (loading) {
@@ -54,9 +52,6 @@ const TableComponent: React.FC = () => {
                     <TableCellContent
                       columnName={columnName}
                       dataSource={dataSource}
-                      inputValues={inputValues}
-                      handleNameChange={handleNameChange}
-                      handleArchivedChange={handleArchivedChange}
                     />
                   </TableCell>
                 )
